@@ -9,10 +9,6 @@ public class ExpenseResource extends ResourceSupport {
 	private double price;
 	private int amount = 1;
 
-	public ExpenseResource() {
-
-	}
-
 	protected ExpenseResource(final String name, final String description, final double price, final int amount) {
 		this.name = name;
 		this.description = description;
