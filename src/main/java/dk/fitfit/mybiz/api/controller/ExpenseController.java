@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 @CrossOrigin
@@ -25,5 +27,10 @@ public class ExpenseController {
 	public ExpenseResource getExpense(@PathVariable Long id) {
 		Expense expense = expenseService.findOne(id);
 		return assembler.toResource(expense);
+	}
+
+	@RequestMapping("/expenses")
+	public List<ExpenseResource> getExpenses() {
+		return assembler.toResources(expenseService.findAll());
 	}
 }
