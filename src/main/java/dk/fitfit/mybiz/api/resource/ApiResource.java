@@ -1,5 +1,6 @@
 package dk.fitfit.mybiz.api.resource;
 
+import dk.fitfit.mybiz.api.controller.ApiController;
 import dk.fitfit.mybiz.api.controller.ExpenseController;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -13,6 +14,7 @@ public class ApiResource extends ResourceSupport {
 	private String version = "0.1";
 
 	public ApiResource() {
+		add(linkTo(methodOn(ApiController.class).getApi()).withSelfRel());
 		add(linkTo(methodOn(ExpenseController.class).getExpenses()).withRel("expenses"));
 	}
 
