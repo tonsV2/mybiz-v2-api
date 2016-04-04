@@ -4,10 +4,10 @@ import org.springframework.hateoas.ResourceSupport;
 
 
 public class ExpenseResource extends ResourceSupport {
-	private String name;
-	private String description;
-	private double price;
-	private int amount = 1;
+	protected String name;
+	protected String description;
+	protected double price;
+	protected int amount = 1;
 
 	protected ExpenseResource(final String name, final String description, final double price, final int amount) {
 		this.name = name;

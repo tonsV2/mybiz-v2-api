@@ -37,7 +37,7 @@ public class ExpenseResourceBuilder {
 		return this;
 	}
 
-	public ExpenseResource create() {
+	public ExpenseResource build() {
 		ExpenseResource resource = new ExpenseResource(name, description, price, amount);
 		resource.add(links);
 		return resource;
