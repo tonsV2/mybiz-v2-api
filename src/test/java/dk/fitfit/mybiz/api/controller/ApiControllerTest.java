@@ -35,11 +35,6 @@ public class ApiControllerTest extends TestCase {
 	}
 
 	@Test
-	public void testGetApi2() throws Exception {
-
-	}
-
-	@Test
 	public void testGetApi() throws Exception {
 		// Given
 		ApiResource resource = controller.getApi();
