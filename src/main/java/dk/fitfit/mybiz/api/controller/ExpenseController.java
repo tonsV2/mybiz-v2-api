@@ -61,6 +61,7 @@ public class ExpenseController {
 
 	@RequestMapping("/expenses")
 	public ExpenseResources getExpenses() {
+		log.info("getExpenses()");
 		return assembler.toResources(expenseService.findAll());
 	}
 }
