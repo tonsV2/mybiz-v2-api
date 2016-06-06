@@ -13,7 +13,13 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class ExpenseResourceLinksAssembler {
 	public List<Link> getLinks(final Expense expense) {
 		List<Link> links = new ArrayList<>();
-		links.add(linkTo(methodOn(ExpenseController.class).getExpense(expense.getId())).withSelfRel());
+		Long expenseId = expense.getId();
+		if(expenseId != null) {
+			links.add(linkTo(methodOn(ExpenseController.class).getExpense(expenseId)).withSelfRel());
+		} else {
+			links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withSelfRel());
+		}
+		links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withRel("prototype"));
 		return links;
 	}
 }

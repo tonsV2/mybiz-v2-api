@@ -26,6 +26,13 @@ public class ExpenseController {
 	@Autowired
 	ExpenseResourceAssembler assembler;
 
+	@RequestMapping("/expense/prototype")
+	public ExpenseResource getPrototype() {
+		log.info("getPrototype()");
+		Expense expense = new Expense();
+		return assembler.toResource(expense);
+	}
+
 	@RequestMapping("/expense/{id}")
 	public ExpenseResource getExpense(@PathVariable Long id) {
 		log.info("getExpense({})", id);

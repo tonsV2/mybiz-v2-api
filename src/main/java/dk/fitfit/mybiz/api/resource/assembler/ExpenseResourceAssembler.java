@@ -34,6 +34,7 @@ public class ExpenseResourceAssembler implements ResourceAssembler<Expense, Expe
 		ExpenseResources expenseResources = new ExpenseResources();
 		expenseResources.setExpenses(resources);
 		expenseResources.add(linkTo(methodOn(ExpenseController.class).getExpenses()).withSelfRel());
+		expenseResources.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withRel("prototype"));
 		return expenseResources;
 	}
 }

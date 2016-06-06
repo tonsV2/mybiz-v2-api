@@ -9,7 +9,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 public class ApiResource extends ResourceSupport {
-	private String name = "MyBiz2 API";
+	private String title = "MyBiz2 API";
 	private String description = "Rest API for My Business";
 	private String version = "0.1";
 
@@ -18,8 +18,8 @@ public class ApiResource extends ResourceSupport {
 		add(linkTo(methodOn(ExpenseController.class).getExpenses()).withRel("expenses"));
 	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
 	public String getDescription() {
