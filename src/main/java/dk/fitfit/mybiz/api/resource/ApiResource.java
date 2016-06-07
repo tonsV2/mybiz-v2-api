@@ -14,6 +14,10 @@ public class ApiResource extends ResourceSupport {
 	private String version = "0.1";
 
 	public ApiResource() {
+		addLinks();
+	}
+
+	private void addLinks() {
 		add(linkTo(methodOn(ApiController.class).getApi()).withSelfRel());
 		add(linkTo(methodOn(ExpenseController.class).getExpenses()).withRel("expenses"));
 	}
