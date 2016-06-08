@@ -6,6 +6,7 @@ import dk.fitfit.mybiz.api.resource.ExpenseResource;
 import dk.fitfit.mybiz.api.resource.ExpenseResourceBuilder;
 import dk.fitfit.mybiz.api.resource.ExpenseResources;
 import dk.fitfit.mybiz.business.domain.Expense;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +18,11 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
 public class ExpenseResourceAssembler implements ResourceAssembler<Expense, ExpenseResource> {
+	@Autowired
+	private ExpenseResourceLinksAssembler linksAssembler;
+
 	@Override
 	public ExpenseResource toResource(final Expense entity) {
-		ExpenseResourceLinksAssembler linksAssembler = new ExpenseResourceLinksAssembler();
 		ExpenseResourceBuilder builder = new ExpenseResourceBuilder();
 		builder.withName(entity.getName())
 				.withDescription(entity.getDescription())
