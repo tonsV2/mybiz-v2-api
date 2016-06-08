@@ -9,6 +9,10 @@ public class ExpenseResource extends ResourceSupport {
 	protected double price;
 	protected int amount = 1;
 
+	// Required for spring to be able to instantiate during posting of data
+	public ExpenseResource() {
+	}
+
 	protected ExpenseResource(final String name, final String description, final double price, final int amount) {
 		this.name = name;
 		this.description = description;

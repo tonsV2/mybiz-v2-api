@@ -8,10 +8,13 @@ import dk.fitfit.mybiz.business.service.ExpenseServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 
 @RestController
@@ -47,16 +50,27 @@ public class ExpenseController {
 		return assembler.toResource(expense);
 	}
 
-	@RequestMapping(value = "/expense/{id}", method = POST)
-	public ExpenseResource postExpense(@PathVariable Long id, @RequestBody ExpenseResource resource) {
-		log.info("postExpense({})", id);
-		Expense expense = new Expense();
-		expense.setId(id);
+	@RequestMapping(value = "/expense/{id}", method = PUT)
+	public ResponseEntity<Void> putExpense(@PathVariable Long id, @RequestBody ExpenseResource resource) {
+		log.info("putExpense({})", id);
+		Expense expense = expenseService.findOne(id);
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
 		expense.setPrice(resource.getPrice());
 		expense.setAmount(resource.getAmount());
-		return assembler.toResource(expense);
+		expenseService.save(expense);
+		return ResponseEntity.noContent().build();
+	}
+
+	@RequestMapping(value = "/expense", method = POST)
+	public ResponseEntity<ExpenseResource> postExpense(@RequestBody ExpenseResource resource) {
+		log.info("postExpense()");
+		Expense expense = new Expense();
+		expense.setName(resource.getName());
+		expense.setDescription(resource.getDescription());
+		expense.setPrice(resource.getPrice());
+		expense.setAmount(resource.getAmount());
+		return new ResponseEntity<>(assembler.toResource(expense), HttpStatus.CREATED);
 	}
 
 	@RequestMapping("/expenses")

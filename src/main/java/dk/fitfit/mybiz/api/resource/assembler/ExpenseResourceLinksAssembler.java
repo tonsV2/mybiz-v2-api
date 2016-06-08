@@ -19,6 +19,7 @@ public class ExpenseResourceLinksAssembler {
 		} else {
 			links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withSelfRel());
 		}
+		links.add(linkTo(methodOn(ExpenseController.class).postExpense(null)).withRel("expense"));
 		links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withRel("prototype"));
 		return links;
 	}
