@@ -1,5 +1,7 @@
 package dk.fitfit.mybiz.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.fitfit.mybiz.api.resource.ExpenseResource;
 import dk.fitfit.mybiz.api.resource.ExpenseResources;
 import dk.fitfit.mybiz.api.resource.assembler.ExpenseResourceAssembler;
@@ -12,9 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @RestController
@@ -64,7 +64,13 @@ public class ExpenseController {
 
 	@RequestMapping(value = "/expense", method = POST)
 	public ResponseEntity<ExpenseResource> postExpense(@RequestBody ExpenseResource resource) {
-		log.info("postExpense()");
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String json = mapper.writeValueAsString(resource);
+			log.info("postExpense({})", json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		Expense expense = new Expense();
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
