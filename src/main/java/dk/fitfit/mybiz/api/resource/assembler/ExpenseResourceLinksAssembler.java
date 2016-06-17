@@ -23,7 +23,14 @@ public class ExpenseResourceLinksAssembler implements ResourceLinksAssemblerInte
 		} else {
 			links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withSelfRel());
 		}
-		links.add(linkTo(methodOn(ExpenseController.class).postExpense(null)).withRel("expense"));
+
+		long id = 54321L;
+		Link fakeExpenseByIdLink = linkTo(methodOn(ExpenseController.class).getExpense(id)).withSelfRel();
+		// TODO: This sucks!!! What to do... ?
+		String href = fakeExpenseByIdLink.getHref().replace(String.valueOf(id), "{Id}");
+		Link expenseByIdLink = new Link(href).withRel("expense");
+		links.add(expenseByIdLink);
+
 		links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withRel("prototype"));
 		return links;
 	}

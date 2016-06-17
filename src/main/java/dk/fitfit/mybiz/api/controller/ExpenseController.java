@@ -62,7 +62,7 @@ public class ExpenseController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@RequestMapping(value = "/expense", method = POST)
+	@RequestMapping(value = {"/expense", "/expenses"}, method = POST)
 	public ResponseEntity<ExpenseResource> postExpense(@RequestBody ExpenseResource resource) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
