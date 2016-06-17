@@ -36,6 +36,7 @@ public class ExpenseResourceAssembler implements ResourceAssembler<Expense, Expe
 		List<ExpenseResource> resources = Lists.transform(all, this::toResource);
 		ExpenseResources expenseResources = new ExpenseResources();
 		expenseResources.setExpenses(resources);
+		// TODO: A templated url needs to be added such that individual expenses are available. This list might not include all of them.
 		expenseResources.add(linkTo(methodOn(ExpenseController.class).getExpenses()).withSelfRel());
 		expenseResources.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withRel("prototype"));
 		return expenseResources;

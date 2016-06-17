@@ -34,7 +34,7 @@ public class ExpenseResourceLinksAssembler implements ResourceLinksAssemblerInte
 		long id = 54321L;
 		Link fakeExpenseByIdLink = linkTo(methodOn(ExpenseController.class).getExpense(id)).withSelfRel();
 		// TODO: This sucks!!! What to do... ? Is it that bad? What if I generate a random number
-		String href = fakeExpenseByIdLink.getHref().replace(String.valueOf(id), "{Id}");
+		String href = fakeExpenseByIdLink.getHref().replace(String.valueOf(id), "{id}");
 		Link expenseByIdLink = new Link(href).withRel("expense");
 		links.add(expenseByIdLink);
 	}
