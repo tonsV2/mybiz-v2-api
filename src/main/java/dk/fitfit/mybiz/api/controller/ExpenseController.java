@@ -52,7 +52,7 @@ public class ExpenseController {
 
 	@RequestMapping(value = "/expense/{id}", method = PUT)
 	public ResponseEntity<Void> putExpense(@PathVariable Long id, @RequestBody ExpenseResource resource) {
-		log.info("putExpense({})", id);
+		log("putExpense({})", resource);
 		Expense expense = expenseService.findOne(id);
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
@@ -64,19 +64,23 @@ public class ExpenseController {
 
 	@RequestMapping(value = {"/expense", "/expenses"}, method = POST)
 	public ResponseEntity<ExpenseResource> postExpense(@RequestBody ExpenseResource resource) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String json = mapper.writeValueAsString(resource);
-			log.info("postExpense({})", json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		log("postExpense({})", resource);
 		Expense expense = new Expense();
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
 		expense.setPrice(resource.getPrice());
 		expense.setAmount(resource.getAmount());
 		return new ResponseEntity<>(assembler.toResource(expense), HttpStatus.CREATED);
+	}
+
+	private void log(final String text, final ExpenseResource resource) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String json = mapper.writeValueAsString(resource);
+			log.info(text, json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequestMapping("/expenses")
