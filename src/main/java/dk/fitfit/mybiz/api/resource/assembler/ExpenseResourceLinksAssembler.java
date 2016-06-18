@@ -24,6 +24,7 @@ public class ExpenseResourceLinksAssembler implements ResourceLinksAssemblerInte
 			links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withSelfRel());
 		}
 		links.add(linkTo(methodOn(ExpenseController.class).getPrototype()).withRel("prototype"));
+		links.add(linkTo(methodOn(ExpenseController.class).getExpenses()).withRel("expenses"));
 
 		addTemplatedLinkForExpense(links);
 
@@ -31,7 +32,10 @@ public class ExpenseResourceLinksAssembler implements ResourceLinksAssemblerInte
 	}
 
 	private void addTemplatedLinkForExpense(final List<Link> links) {
+		Link controller = linkTo(ExpenseController.class).slash("expense/{id}").withRel("expense-manually-made--bad-escape");
+
 		long id = 54321L;
+		links.add(controller);
 		Link fakeExpenseByIdLink = linkTo(methodOn(ExpenseController.class).getExpense(id)).withSelfRel();
 		// TODO: This sucks!!! What to do... ? Is it that bad? What if I generate a random number
 		String href = fakeExpenseByIdLink.getHref().replace(String.valueOf(id), "{id}");

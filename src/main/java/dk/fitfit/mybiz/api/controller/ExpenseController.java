@@ -53,6 +53,8 @@ public class ExpenseController {
 	@RequestMapping(value = "/expense/{id}", method = PUT)
 	public ResponseEntity<Void> putExpense(@PathVariable Long id, @RequestBody ExpenseResource resource) {
 		log("putExpense({})", resource);
+		// TODO: Don't was resources looking up the old resource
+		// TODO: Refactor this into an assembler
 		Expense expense = expenseService.findOne(id);
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
@@ -73,11 +75,11 @@ public class ExpenseController {
 		return new ResponseEntity<>(assembler.toResource(expense), HttpStatus.CREATED);
 	}
 
-	private void log(final String text, final ExpenseResource resource) {
+	private void log(final String format, final ExpenseResource resource) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writeValueAsString(resource);
-			log.info(text, json);
+			log.info(format, json);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
