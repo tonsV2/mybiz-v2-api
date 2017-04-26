@@ -4,6 +4,7 @@ import dk.fitfit.mybiz.business.service.CrudServiceInterface;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 public abstract class CrudController<T, ID extends Serializable> {
 	private CrudServiceInterface<T, ID> service;
@@ -13,7 +14,7 @@ public abstract class CrudController<T, ID extends Serializable> {
 	}
 
 	@GetMapping
-	public Iterable<T> findAll() {
+	public List<T> findAll() {
 		return service.findAll();
 	}
 

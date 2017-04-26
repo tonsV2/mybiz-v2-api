@@ -1,0 +1,19 @@
+# TODO: This file is in the wrong module. The api shouldn't care about which db is used in business
+spring:
+  application:
+    name: MyBiz - API
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/mybiz
+    username: mybiz
+    password: mybiz
+    driverClassName: org.postgresql.Driver
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
