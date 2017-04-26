@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public abstract class CrudController<T, ID extends Serializable> {
-	private CrudServiceInterface<T, ID> service;
+	protected CrudServiceInterface<T, ID> service;
 
 	CrudController(CrudServiceInterface<T, ID> service) {
 		this.service = service;
