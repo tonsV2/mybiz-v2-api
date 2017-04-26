@@ -4,8 +4,6 @@ import dk.fitfit.mybiz.business.domain.*;
 import dk.fitfit.mybiz.business.service.*;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class DataInitialization {
 	private ExpenseServiceInterface expenseService;
@@ -29,20 +27,19 @@ public class DataInitialization {
 		expense.setName("Some expense");
 		expenseService.save(expense);
 
-		List<Expense> expenses = expenseService.findAll();
-
-		for (Expense exp : expenses) {
-			System.out.println(exp.getId());
-		}
-
-		Product product = createProduct("1 hour of programming", 400);
-		Product product1 = createProduct("1 hour of support", 300);
-		Product product2 = createProduct("1 month of hosting", 100);
-
 		User user = createUser("username", "password", "email");
 
-		Client client = createClient("Some client", "some@client.com");
+		Product product = createProduct(user, "1 hour of programming", 400);
+		Product product1 = createProduct(user, "1 hour of support", 300);
+		Product product2 = createProduct(user, "1 month of hosting", 100);
 
+		Client client = createClient(user, "Some client", "some@client.com");
+
+		Order order = createOrder(user, client, product, product1, product2);
+		Order foundOrder = orderService.findOne(order.getId());
+	}
+
+	private Order createOrder(User user, Client client, Product product, Product product1, Product product2) {
 		Order order = new Order();
 		order.setUser(user);
 		order.setClient(client);
@@ -50,20 +47,13 @@ public class DataInitialization {
 		order.addProduct(product, 666);
 		order.addProduct(product1, 2);
 		order.addProduct(product2, 12);
-
-		Order savedOrder = orderService.save(order);
-
-		Order foundOrder = orderService.findOne(savedOrder.getId());
-//		System.out.println(foundOrder);
-		for (OrderEntity orderEntity : foundOrder.getOrderEntities()) {
-			String output = String.format("%s - %s", orderEntity.getProduct().getId(), orderEntity.getProduct().getName());
-			System.out.println(output);
-		}
-		System.out.println("sdsd");
+		orderService.save(order);
+		return order;
 	}
 
-	private Client createClient(String name, String email) {
+	private Client createClient(User user, String name, String email) {
 		Client client = new Client();
+		client.setUser(user);
 		client.setName(name);
 		client.setEmail(email);
 		return clientService.save(client);
@@ -78,8 +68,9 @@ public class DataInitialization {
 		return user;
 	}
 
-	private Product createProduct(String name, int price) {
+	private Product createProduct(User user, String name, int price) {
 		Product product = new Product();
+		product.setUser(user);
 		product.setName(name);
 		product.setPrice(price);
 		productService.save(product);
