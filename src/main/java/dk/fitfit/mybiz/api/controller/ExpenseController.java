@@ -5,12 +5,17 @@ import dk.fitfit.mybiz.api.resource.ExpenseResource;
 import dk.fitfit.mybiz.api.resource.ExpenseResources;
 import dk.fitfit.mybiz.api.resource.assembler.ExpenseResourceAssembler;
 import dk.fitfit.mybiz.business.domain.Expense;
+import dk.fitfit.mybiz.business.domain.ExpenseOverview;
+import dk.fitfit.mybiz.business.domain.User;
 import dk.fitfit.mybiz.business.service.ExpenseServiceInterface;
+import dk.fitfit.mybiz.business.service.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 
@@ -20,11 +25,22 @@ import java.util.List;
 public class ExpenseController {
 	private ExpenseServiceInterface expenseService;
 	private ExpenseResourceAssembler assembler;
+	private UserServiceInterface userService;
 
 	@Autowired
-	public ExpenseController(ExpenseServiceInterface expenseService, ExpenseResourceAssembler assembler) {
+	public ExpenseController(ExpenseServiceInterface expenseService, ExpenseResourceAssembler assembler, UserServiceInterface userService) {
 		this.expenseService = expenseService;
 		this.assembler = assembler;
+		this.userService = userService;
+	}
+
+	@GetMapping("/overview")
+	public ExpenseOverview getOverview() {
+		long from = LocalDateTime.of(2015, 4, 1, 0, 0).toEpochSecond(ZoneOffset.UTC);
+		long to = LocalDateTime.of(2015, 4, 30, 0, 0).toEpochSecond(ZoneOffset.UTC);
+		User user = userService.findOne(1L);
+
+		return expenseService.calculateOverview(user, from, to);
 	}
 
 	@GetMapping("/prototype")

@@ -4,6 +4,10 @@ import dk.fitfit.mybiz.business.domain.*;
 import dk.fitfit.mybiz.business.service.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+
 @Component
 public class DataInitialization {
 	private ExpenseServiceInterface expenseService;
@@ -23,9 +27,7 @@ public class DataInitialization {
 	}
 
 	private void loadData() {
-		Expense expense = new Expense();
-		expense.setName("Some expense");
-		expenseService.save(expense);
+		example();
 
 		User user = createUser("username", "password", "email");
 
@@ -37,6 +39,37 @@ public class DataInitialization {
 
 		Order order = createOrder(user, client, product, product1, product2);
 		Order foundOrder = orderService.findOne(order.getId());
+	}
+
+	private void example() {
+		User user = createUser("et", "password", "other");
+
+		LocalDateTime dateTime = LocalDateTime.of(2015, 4, 3, 0, 0);
+		createExpense(user, "Larsen Data ApS", 100.39, "Ordernumber 760463", dateTime);
+
+		dateTime = LocalDateTime.of(2015, 4, 5, 0, 0);
+		createExpense(user, "Gigahost", 448, "Faktura 211396", dateTime);
+
+		dateTime = LocalDateTime.of(2015, 4, 7, 0, 0);
+		createExpense(user, "CineMagic A/S", 1038.81, "FAKTURA  210581", dateTime);
+
+		long from = LocalDateTime.of(2015, 4, 1, 0, 0).toEpochSecond(ZoneOffset.UTC);
+		long to = LocalDateTime.of(2015, 4, 30, 0, 0).toEpochSecond(ZoneOffset.UTC);
+
+		List<Expense> expenses = expenseService.findAll(user, from, to);
+		double totalVat = expenseService.totalVat(user, from, to);
+		double totalPriceWithoutVat = expenseService.totalPriceWithoutVat(user, from, to);
+		System.out.println("sdsds");
+	}
+
+	private void createExpense(User user, String name, double price, String description, LocalDateTime dateTime) {
+		Expense expense = new Expense();
+		expense.setUser(user);
+		expense.setName(name);
+		expense.setPrice(price);
+		expense.setDescription(description);
+		expense.setTimestamp(dateTime);
+		expenseService.save(expense);
 	}
 
 	private Order createOrder(User user, Client client, Product product, Product product1, Product product2) {
