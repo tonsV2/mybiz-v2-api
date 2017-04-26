@@ -1,10 +1,7 @@
 package dk.fitfit.mybiz.api.configuration;
 
 import dk.fitfit.mybiz.business.domain.*;
-import dk.fitfit.mybiz.business.service.ExpenseServiceInterface;
-import dk.fitfit.mybiz.business.service.OrderServiceInterface;
-import dk.fitfit.mybiz.business.service.ProductServiceInterface;
-import dk.fitfit.mybiz.business.service.UserServiceInterface;
+import dk.fitfit.mybiz.business.service.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,12 +12,14 @@ public class DataInitialization {
 	private ProductServiceInterface productService;
 	private OrderServiceInterface orderService;
 	private UserServiceInterface userService;
+	private ClientServiceInterface clientService;
 
-	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService) {
+	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService, ClientServiceInterface clientService) {
 		this.expenseService = expenseService;
 		this.productService = productService;
 		this.orderService = orderService;
 		this.userService = userService;
+		this.clientService = clientService;
 
 		loadData();
 	}
@@ -42,9 +41,11 @@ public class DataInitialization {
 
 		User user = createUser("username", "password", "email");
 
+		Client client = createClient("Some client", "some@client.com");
+
 		Order order = new Order();
 		order.setUser(user);
-//		order.setClient(new Client());
+		order.setClient(client);
 		order.setTimestamp(System.currentTimeMillis());
 		order.addProduct(product, 666);
 		order.addProduct(product1, 2);
@@ -59,6 +60,13 @@ public class DataInitialization {
 			System.out.println(output);
 		}
 		System.out.println("sdsd");
+	}
+
+	private Client createClient(String name, String email) {
+		Client client = new Client();
+		client.setName(name);
+		client.setEmail(email);
+		return clientService.save(client);
 	}
 
 	private User createUser(String username, String password, String email) {
