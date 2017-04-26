@@ -1,12 +1,10 @@
 package dk.fitfit.mybiz.api.configuration;
 
-import dk.fitfit.mybiz.business.domain.Expense;
-import dk.fitfit.mybiz.business.domain.Order;
-import dk.fitfit.mybiz.business.domain.OrderEntity;
-import dk.fitfit.mybiz.business.domain.Product;
+import dk.fitfit.mybiz.business.domain.*;
 import dk.fitfit.mybiz.business.service.ExpenseServiceInterface;
 import dk.fitfit.mybiz.business.service.OrderServiceInterface;
 import dk.fitfit.mybiz.business.service.ProductServiceInterface;
+import dk.fitfit.mybiz.business.service.UserServiceInterface;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,11 +14,14 @@ public class DataInitialization {
 	private ExpenseServiceInterface expenseService;
 	private ProductServiceInterface productService;
 	private OrderServiceInterface orderService;
+	private UserServiceInterface userService;
 
-	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService) {
+	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService) {
 		this.expenseService = expenseService;
 		this.productService = productService;
 		this.orderService = orderService;
+		this.userService = userService;
+
 		loadData();
 	}
 
@@ -35,22 +36,14 @@ public class DataInitialization {
 			System.out.println(exp.getId());
 		}
 
-		Product product = new Product();
-		product.setName("1 hour of programming");
-		product.setPrice(400);
-		productService.save(product);
+		Product product = createProduct("1 hour of programming", 400);
+		Product product1 = createProduct("1 hour of support", 300);
+		Product product2 = createProduct("1 month of hosting", 100);
 
-		Product product1 = new Product();
-		product1.setName("1 hour of support");
-		product1.setPrice(300);
-		productService.save(product1);
-
-		Product product2 = new Product();
-		product2.setName("1 month of hosting");
-		product2.setPrice(100);
-		productService.save(product2);
+		User user = createUser("username", "password", "email");
 
 		Order order = new Order();
+		order.setUser(user);
 //		order.setClient(new Client());
 		order.setTimestamp(System.currentTimeMillis());
 		order.addProduct(product, 666);
@@ -65,6 +58,23 @@ public class DataInitialization {
 			String output = String.format("%s - %s", orderEntity.getProduct().getId(), orderEntity.getProduct().getName());
 			System.out.println(output);
 		}
+		System.out.println("sdsd");
+	}
 
+	private User createUser(String username, String password, String email) {
+		User user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		user.setEmail(email);
+		userService.save(user);
+		return user;
+	}
+
+	private Product createProduct(String name, int price) {
+		Product product = new Product();
+		product.setName(name);
+		product.setPrice(price);
+		productService.save(product);
+		return product;
 	}
 }
