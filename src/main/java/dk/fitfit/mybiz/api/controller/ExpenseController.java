@@ -1,15 +1,11 @@
 package dk.fitfit.mybiz.api.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import dk.fitfit.mybiz.api.resource.ExpenseResource;
 import dk.fitfit.mybiz.api.resource.ExpenseResources;
 import dk.fitfit.mybiz.api.resource.assembler.ExpenseResourceAssembler;
 import dk.fitfit.mybiz.business.domain.Expense;
 import dk.fitfit.mybiz.business.service.ExpenseServiceInterface;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,45 +13,40 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/expenses")
 public class ExpenseController {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private ExpenseServiceInterface expenseService;
+	private ExpenseResourceAssembler assembler;
 
 	@Autowired
-	ExpenseServiceInterface expenseService;
+	public ExpenseController(ExpenseServiceInterface expenseService, ExpenseResourceAssembler assembler) {
+		this.expenseService = expenseService;
+		this.assembler = assembler;
+	}
 
-	@Autowired
-	ExpenseResourceAssembler assembler;
-
-	@RequestMapping("/expense/prototype")
+	@GetMapping("/prototype")
 	public ExpenseResource getPrototype() {
-		log.info("getPrototype()");
 		Expense expense = new Expense();
 		return assembler.toResource(expense);
 	}
 
-	@RequestMapping("/expense/{id}")
+	@GetMapping("/{id}")
 	public ExpenseResource getExpense(@PathVariable Long id) {
-		log.info("getExpense({})", id);
 		Expense expense = expenseService.findOne(id);
 		return assembler.toResource(expense);
 	}
 
-	@RequestMapping(value = "/expense/{id}", method = DELETE)
+	@DeleteMapping("/{id}")
 	public ExpenseResource deleteExpense(@PathVariable Long id) {
-		log.info("deleteExpense({})", id);
 		Expense expense = expenseService.findOne(id);
 		return assembler.toResource(expense);
 	}
 
-	@RequestMapping(value = "/expense/{id}", method = PUT)
+	@PutMapping("/{id}")
 	public ResponseEntity<Void> putExpense(@PathVariable Long id, @RequestBody ExpenseResource resource) {
-		log("putExpense({})", resource);
 		// TODO: Don't was resources looking up the old resource
 		// TODO: Refactor this into an assembler
 		Expense expense = expenseService.findOne(id);
@@ -67,9 +58,8 @@ public class ExpenseController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@RequestMapping(value = {"/expense", "/expenses"}, method = POST)
+	@PostMapping
 	public ResponseEntity<ExpenseResource> postExpense(@RequestBody ExpenseResource resource) {
-		log("postExpense({})", resource);
 		Expense expense = new Expense();
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
@@ -79,7 +69,7 @@ public class ExpenseController {
 		return new ResponseEntity<>(assembler.toResource(expense), HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/init", method = GET)
+	@GetMapping("/init")
 	public ExpenseResources init() {
 		Expense expense = new Expense();
 		expense.setName("Shalala name...");
@@ -99,19 +89,8 @@ public class ExpenseController {
 		return assembler.toResources(expenses);
 	}
 
-	private void log(final String format, final ExpenseResource resource) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String json = mapper.writeValueAsString(resource);
-			log.info(format, json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@RequestMapping("/expenses")
+	@GetMapping
 	public ExpenseResources getExpenses() {
-		log.info("getExpenses()");
 		return assembler.toResources(expenseService.findAll());
 	}
 }
