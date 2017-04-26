@@ -53,7 +53,6 @@ public class ExpenseController {
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
 		expense.setPrice(resource.getPrice());
-		expense.setAmount(resource.getAmount());
 		expenseService.save(expense);
 		return ResponseEntity.noContent().build();
 	}
@@ -64,7 +63,6 @@ public class ExpenseController {
 		expense.setName(resource.getName());
 		expense.setDescription(resource.getDescription());
 		expense.setPrice(resource.getPrice());
-		expense.setAmount(resource.getAmount());
 		expenseService.save(expense);
 		return new ResponseEntity<>(assembler.toResource(expense), HttpStatus.CREATED);
 	}
@@ -74,14 +72,12 @@ public class ExpenseController {
 		Expense expense = new Expense();
 		expense.setName("Shalala name...");
 		expense.setDescription("some description");
-		expense.setAmount(666);
 		expense.setPrice(12);
 		Expense saved = expenseService.save(expense);
 
 		Expense expense1 = new Expense();
 		expense1.setName("Other expense name...");
 		expense1.setDescription("Some other description");
-		expense1.setAmount(1212);
 		expense1.setPrice(6);
 		Expense saved1 = expenseService.save(expense1);
 

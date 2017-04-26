@@ -38,7 +38,7 @@ public class ExpenseResourceBuilder {
 	}
 
 	public ExpenseResource build() {
-		ExpenseResource resource = new ExpenseResource(name, description, price, amount);
+		ExpenseResource resource = new ExpenseResource(name, description, price);
 		resource.add(links);
 		return resource;
 	}

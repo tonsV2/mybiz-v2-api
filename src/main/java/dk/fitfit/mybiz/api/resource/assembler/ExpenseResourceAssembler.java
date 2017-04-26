@@ -26,7 +26,6 @@ public class ExpenseResourceAssembler implements ResourceAssembler<Expense, Expe
 		ExpenseResourceBuilder builder = new ExpenseResourceBuilder();
 		builder.withName(entity.getName())
 				.withDescription(entity.getDescription())
-				.withAmount(entity.getAmount())
 				.withPrice(entity.getPrice())
 				.withLinks(linksAssembler.getLinks(entity));
 		return builder.build();
