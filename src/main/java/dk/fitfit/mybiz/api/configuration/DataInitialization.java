@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 
 @Component
 public class DataInitialization {
@@ -27,7 +26,7 @@ public class DataInitialization {
 	}
 
 	private void loadData() {
-		example();
+		expenseOverview();
 
 		User user = createUser("username", "password", "email");
 
@@ -41,7 +40,7 @@ public class DataInitialization {
 		Order foundOrder = orderService.findOne(order.getId());
 	}
 
-	private void example() {
+	private void expenseOverview() {
 		User user = createUser("et", "password", "other");
 
 		LocalDateTime dateTime = LocalDateTime.of(2015, 4, 3, 0, 0);
@@ -56,9 +55,10 @@ public class DataInitialization {
 		long from = LocalDateTime.of(2015, 4, 1, 0, 0).toEpochSecond(ZoneOffset.UTC);
 		long to = LocalDateTime.of(2015, 4, 30, 0, 0).toEpochSecond(ZoneOffset.UTC);
 
-		List<Expense> expenses = expenseService.findAll(user, from, to);
-		double totalVat = expenseService.totalVat(user, from, to);
-		double totalPriceWithoutVat = expenseService.totalPriceWithoutVat(user, from, to);
+//		List<Expense> expenses = expenseService.findAll(user, from, to);
+//		double totalVat = expenseService.totalVat(user, from, to);
+//		double totalPriceWithoutVat = expenseService.totalPriceWithoutVat(user, from, to);
+		ExpenseOverview expenseOverview = expenseService.calculateOverview(user, from, to);
 		System.out.println("sdsds");
 	}
 
@@ -76,10 +76,10 @@ public class DataInitialization {
 		Order order = new Order();
 		order.setUser(user);
 		order.setClient(client);
-		order.setTimestamp(System.currentTimeMillis());
-		order.addProduct(product, 666);
-		order.addProduct(product1, 2);
-		order.addProduct(product2, 12);
+		order.setTimestamp(System.currentTimeMillis() / 1000L);
+		order.addEntity(product, 666);
+		order.addEntity(product1, 2);
+		order.addEntity(product2, 12);
 		orderService.save(order);
 		return order;
 	}
