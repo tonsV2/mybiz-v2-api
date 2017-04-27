@@ -1,9 +1,16 @@
 package dk.fitfit.mybiz.api.configuration;
 
+import com.lowagie.text.DocumentException;
 import dk.fitfit.mybiz.business.domain.*;
 import dk.fitfit.mybiz.business.service.*;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -14,15 +21,38 @@ public class DataInitialization {
 	private OrderServiceInterface orderService;
 	private UserServiceInterface userService;
 	private ClientServiceInterface clientService;
+	private PDFService pdfService;
 
-	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService, ClientServiceInterface clientService) {
+	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService, ClientServiceInterface clientService, PDFService pdfService) {
 		this.expenseService = expenseService;
 		this.productService = productService;
 		this.orderService = orderService;
 		this.userService = userService;
 		this.clientService = clientService;
+		this.pdfService = pdfService;
 
 		loadData();
+		try {
+			pdfTest();
+		} catch (ParserConfigurationException | IOException | SAXException | DocumentException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Inspiration: http://hintcnuie.iteye.com/blog/509960
+	private void pdfTest() throws ParserConfigurationException, IOException, SAXException, DocumentException {
+		String html = "<html>\n" +
+				" <head>\n" +
+				" </head>\n" +
+				" <body>\n" +
+				"  <div>Hello PDF!</div>\n" +
+				" </body>\n" +
+				"</html>\n";
+
+		ByteArrayOutputStream outputStream = pdfService.generatePdf(html);
+		try(OutputStream fileOutputStream = new FileOutputStream("/home/tons/thefilename.pdf")) {
+			outputStream.writeTo(fileOutputStream);
+		}
 	}
 
 	private void loadData() {
