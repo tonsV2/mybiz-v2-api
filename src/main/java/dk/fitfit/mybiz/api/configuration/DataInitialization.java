@@ -123,12 +123,7 @@ public class DataInitialization {
 	}
 
 	private User createUser(String username, String password, String email) {
-		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);
-		user.setEmail(email);
-		userService.save(user);
-		return user;
+		return userService.save(username, password, email);
 	}
 
 	private Product createProduct(User user, String name, int price) {
