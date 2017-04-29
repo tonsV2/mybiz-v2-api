@@ -31,8 +31,8 @@ public class ExpenseResourceAssembler implements ResourceAssembler<Expense, Expe
 		return builder.build();
 	}
 
-	public ExpenseResources toResources(final List<Expense> all) {
-		List<ExpenseResource> resources = Lists.transform(all, this::toResource);
+	public ExpenseResources toResources(final Iterable<Expense> all) {
+		List<ExpenseResource> resources = Lists.transform(Lists.newArrayList(all), this::toResource);
 		ExpenseResources expenseResources = new ExpenseResources();
 		expenseResources.setExpenses(resources);
 		// TODO: A templated url needs to be added such that individual expenses are available. This list might not include all of them.
