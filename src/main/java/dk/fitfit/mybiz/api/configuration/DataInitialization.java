@@ -123,6 +123,7 @@ public class DataInitialization {
 	}
 
 	private User createUser(String username, String password, String email) {
+		System.out.println(String.format("User: %s:%s", username, password));
 		return userService.save(username, password, email);
 	}
 
