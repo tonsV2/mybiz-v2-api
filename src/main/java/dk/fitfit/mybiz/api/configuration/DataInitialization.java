@@ -22,14 +22,16 @@ public class DataInitialization {
 	private UserServiceInterface userService;
 	private ClientServiceInterface clientService;
 	private PDFService pdfService;
+	private RoleServiceInterface roleService;
 
-	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService, ClientServiceInterface clientService, PDFService pdfService) {
+	public DataInitialization(ExpenseServiceInterface expenseService, ProductServiceInterface productService, OrderServiceInterface orderService, UserServiceInterface userService, ClientServiceInterface clientService, PDFService pdfService, RoleServiceInterface roleService) {
 		this.expenseService = expenseService;
 		this.productService = productService;
 		this.orderService = orderService;
 		this.userService = userService;
 		this.clientService = clientService;
 		this.pdfService = pdfService;
+		this.roleService = roleService;
 
 		loadData();
 		try {
@@ -50,12 +52,14 @@ public class DataInitialization {
 				"</html>\n";
 
 		ByteArrayOutputStream outputStream = pdfService.generatePdf(html);
-		try(OutputStream fileOutputStream = new FileOutputStream("/home/tons/thefilename.pdf")) {
-			outputStream.writeTo(fileOutputStream);
+		try (OutputStream fileOutputStream = new FileOutputStream("/home/tons/thefilename.pdf")) {
+//			outputStream.writeTo(fileOutputStream);
 		}
 	}
 
 	private void loadData() {
+		createUserRoles();
+
 		createDataForExpensesOverview();
 
 		User user = createUser("username", "password", "email");
@@ -68,6 +72,21 @@ public class DataInitialization {
 
 		Order order = createOrder(user, client, product, product1, product2);
 		Order foundOrder = orderService.findOne(order.getId());
+	}
+
+	private void createUserRoles() {
+		Role admin = new Role();
+		admin.setName("ROLE_ADMIN");
+		roleService.save(admin);
+
+		Role user = new Role();
+		user.setName("ROLE_USER");
+		roleService.save(user);
+
+		User tons = createUser("tons", "password", "tons@email");
+//		tons.setRoles(new HashSet<>(roleService.findAll()));
+		tons.getRoles().addAll(roleService.findAll());
+		userService.save(tons);
 	}
 
 	private void createDataForExpensesOverview() {
@@ -88,7 +107,7 @@ public class DataInitialization {
 //		List<Expense> expenses = expenseService.findAll(user, from, to);
 //		double totalVat = expenseService.totalVat(user, from, to);
 //		double totalPriceWithoutVat = expenseService.totalPriceWithoutVat(user, from, to);
-		Totals expenseTotals = ((TotalsService<Expense, Long>)expenseService).calculateTotals(user, from, to);
+//		Totals expenseTotals = ((AggregateService<Expense>) expenseService).getTotals(user, from, to);
 		System.out.println("sdsds");
 	}
 
