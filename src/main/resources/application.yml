@@ -24,7 +24,6 @@ spring:
 spring:
   profiles: test
   jpa:
-    database: H2
     database-platform: H2
   datasource:
     platform: h2
